@@ -19,7 +19,7 @@ import moment from 'moment'
 import { db } from '@/configs'
 import { Loader2 } from 'lucide-react'
 
-const PROMPT = ",On Basis of description create JSON form with formTitle, formHeading along with fieldName, FieldTitle,FieldType, Placeholder, label , required fields, and checkbox and select field type options will be in array only and in JSON format"
+const PROMPT = ",On Basis of description create JSON form with formTitle, formHeading along with fieldName, FieldTitle,FieldType, Placeholder, label , required fields, and checkbox and select and rediogroup field type options will be in array only and in JSON format"
 
 
 function CreateForm() {
@@ -32,7 +32,7 @@ function CreateForm() {
 
     const onCreateForm = async () => {
         setLoading(true)
-        const res = await AiChatSession.sendMessage("Description:" + userInput + PROMPT);
+        const result = await AiChatSession.sendMessage("Description:" + userInput + PROMPT);
 
 
         console.log('create-formpage result', result.response.text());

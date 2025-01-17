@@ -50,7 +50,7 @@ function EditForm() {
                 <div className='border rounded-lg shadow-md p-4'>
                     Controller
                 </div>
-                <div className='md:col-span-2 border rounded-lg h-screen p-5 flex items-center justify-center'>
+                <div className='md:col-span-2 border rounded-lg  p-5 flex items-center justify-center'>
                     <FormUi jsonForm={jsonForm} />
                 </div>
             </div>

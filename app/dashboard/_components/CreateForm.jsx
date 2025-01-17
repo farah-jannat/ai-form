@@ -13,13 +13,13 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { AiChatSession } from '@/configs/AiModel'
-import { jsonForms } from '@/configs/schema'
+import { JsonForms } from '@/configs/schema'
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 import { db } from '@/configs'
 import { Loader2 } from 'lucide-react'
 
-const PROMPT = ", On the basis of description create JSON form with formTitle, fromHeading along with fieldName, FieldTittle, FieldType, placeholder, label, required fields in JSON"
+const PROMPT = ",On Basis of description create JSON form with formTitle, formHeading along with fieldName, FieldTitle,FieldType, Placeholder, label , required fields, and checkbox and select field type options will be in array only and in JSON format"
 
 
 function CreateForm() {
@@ -31,26 +31,28 @@ function CreateForm() {
 
 
     const onCreateForm = async () => {
-
         setLoading(true)
-        const result = await AiChatSession.sendMessage("Description:" + userInput + PROMPT);
-        console.log(result.response.text());
+        const res = await AiChatSession.sendMessage("Description:" + userInput + PROMPT);
+
+
+        console.log('create-formpage result', result.response.text());
+
 
         if (result.response.text()) {
+            const resp = await db.insert(JsonForms)
+                .values({
+                    jsonform: result.response.text(),
+                    createdBy: user?.primaryEmailAddress?.emailAddress,
+                    createdAt: moment().format('DD/MM/yyyy')
+                }).returning({ id: JsonForms.id });
 
-            const resp = await db.insert(jsonForms).values({
-                jsonform: result.response.text(),
-                createdBy: user?.primaryEmailAddress?.emailAddress,
-                createdAt: moment().format('DD/MM/YYYY')
-            }).returning({ id: jsonForms.id })
-
-            console.log('New form id', resp[0].id);
+            console.log("New Form ID", resp[0].id);
             if (resp[0].id) {
                 route.push('/edit-form/' + resp[0].id)
             }
-            setLoading(false)
+            setLoading(false);
         }
-        setLoading(false)
+        setLoading(false);
     }
     return (
         <div>

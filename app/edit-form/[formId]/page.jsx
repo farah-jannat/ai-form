@@ -5,12 +5,16 @@ import { useUser } from '@clerk/nextjs'
 import { and, eq } from 'drizzle-orm'
 import React, { useEffect, useState } from 'react'
 import { useParams } from "next/navigation";
+import { ArrowLeft } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import FormUi from '../_components/FormUi'
 
 function EditForm() {
 
     const { user } = useUser()
     const params = useParams();
     const [jsonForm, setJsonForm] = useState([])
+    const router = useRouter()
 
 
 
@@ -28,7 +32,7 @@ function EditForm() {
         const cleanedResponse = result[0].jsonform.replace("```json", "").replace("```", "");
         // console.log('cleanedresponse', cleanedResponse)
         setJsonForm(JSON.parse(cleanedResponse))
-        // console.log('parse json', JSON.parse(cleanedResponse))
+        console.log('parse json', JSON.parse(cleanedResponse))
 
         // console.log('usestate jsonform', jsonForm)
 
@@ -37,12 +41,18 @@ function EditForm() {
 
 
     return (
-        <div className='p-10 bg-slate-600'>
-            <div className='grid grid-cols-1 bg-red-700 md:grid-cols-3'>
-                <div>
+        <div className='p-10 '>
+            <h2 className='flex gap-2 items-center my-5 cursor-pointer hover:font-bold' onClick={() => router.back()}>
+                <ArrowLeft />Back
+            </h2>
+
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
+                <div className='border rounded-lg shadow-md p-4'>
                     Controller
                 </div>
-                <div className='md:col-end-2 bg-blue-500'>Form</div>
+                <div className='md:col-span-2 border rounded-lg h-screen p-5 flex items-center justify-center'>
+                    <FormUi jsonForm={jsonForm} />
+                </div>
             </div>
         </div>
     )

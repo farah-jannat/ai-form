@@ -16,17 +16,20 @@ import {
 } from "@/components/ui/select"
 import FieldEdit from './FieldEdit'
 
-function FormUi({ jsonForm }) {
+function FormUi({ jsonForm, onFieldUpdate, deleteField }) {
+
+
+
     return (
         <div className='border p-5 md:w-[600px] rounded-lg'>
             <h2 className='font-bold text-center text-2xl'>{jsonForm.formTitle}</h2>
             <h2 className='text-sm text-gray-400 text-center'>{jsonForm.formHeading}</h2>
 
             {jsonForm?.fields?.map((field, index) => (
-                <div key={index}>
+                <div key={index} className='flex items-center gap-2'>
 
                     {field.fieldType == 'select' ?
-                        <div className='my-3'>
+                        <div className='my-3 w-full'>
                             <Select>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder={field.label} />
@@ -41,12 +44,12 @@ function FormUi({ jsonForm }) {
                             </Select>
                         </div>
                         : field.fieldType == 'checkbox' ?
-                            <div className='my-3'>
+                            <div className='my-3 w-full'>
                                 <label className='text-xs text-gray-500'>{field.label}</label>
                                 {field?.options ? field?.options?.map((item, index) => (
-                                    <div className='flex gap-2'>
+                                    <div key={index} className='flex gap-2'>
                                         <Checkbox />
-                                        <h2>{item.label}</h2>
+                                        <h2>{item}</h2>
 
                                     </div>
 
@@ -60,7 +63,7 @@ function FormUi({ jsonForm }) {
                                 }
                             </div>
                             : field.fieldType == "radiogroup" ?
-                                <div>
+                                <div className='w-full'>
                                     <label className='text-xs text-gray-500'>{field.label}</label>
 
                                     <RadioGroup>
@@ -77,15 +80,18 @@ function FormUi({ jsonForm }) {
                                 </div>
 
 
-                                : < div className='my-3'>
+                                : < div className='my-3 w-full' >
                                     <label className='text-xs text-gray-500'>{field.label}</label>
                                     <Input type={field?.type}
                                         placeholder={field?.placeholder}
-                                    // name={field?.fieldName}
+                                        name={field?.fieldName}
                                     />
                                 </div>
                     }
-                    <div><FieldEdit /></div>
+                    <div><FieldEdit defaultValue={field}
+                        onUpdate={(value) => onFieldUpdate(value, index)}
+                        deleteField={() => deleteField(index)}
+                    /></div>
                 </div>
 
             ))}

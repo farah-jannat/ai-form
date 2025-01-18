@@ -15,7 +15,32 @@ function EditForm() {
     const params = useParams();
     const [jsonForm, setJsonForm] = useState([])
     const router = useRouter()
+    const [updateTrigger, setUpdateTrigger] = useState();
+    const [record, setRecord] = useState([]);
 
+
+    useEffect(() => {
+        if (updateTrigger) {
+            setJsonForm(jsonForm)
+            updateJsonFormInDb()
+        }
+
+    }, [updateTrigger])
+
+    const onFieldUpdate = (value, index) => {
+
+        jsonForm.fields[index].label = value.label;
+        jsonForm.fields[index].placeholder = value.placeholder;
+        setUpdateTrigger(Date.now())
+
+    }
+    const updateJsonFormInDb = async () => {
+        const result = await db.update(JsonForms)
+            .set({
+                jsonform: jsonForm
+            }).where(and(eq(JsonForms.id, record.id), eq(JsonForms?.createdBy, user?.primaryEmailAddress?.emailAddress)))
+        console.log('result of updaing db', result)
+    }
 
 
 
@@ -28,13 +53,24 @@ function EditForm() {
             .where(and(eq(JsonForms.id, params?.formId),
                 eq(JsonForms.createdBy, user?.primaryEmailAddress?.emailAddress)));
 
-        // console.log('jsonform ', result[0].jsonform)
+        console.log('jsonform ', result[0].jsonform)
+        setRecord(result[0])
         const cleanedResponse = result[0].jsonform.replace("```json", "").replace("```", "");
         // console.log('cleanedresponse', cleanedResponse)
         setJsonForm(JSON.parse(cleanedResponse))
         console.log('parse json', JSON.parse(cleanedResponse))
 
         // console.log('usestate jsonform', jsonForm)
+
+
+
+
+    }
+
+    const deleteField = (indexToRemove) => {
+        const result = jsonForm.fields.filter((item, index) => index != indexToRemove)
+        jsonForm.fields = result;
+        setUpdateTrigger(Date.now())
 
 
     }
@@ -51,7 +87,9 @@ function EditForm() {
                     Controller
                 </div>
                 <div className='md:col-span-2 border rounded-lg  p-5 flex items-center justify-center'>
-                    <FormUi jsonForm={jsonForm} />
+                    <FormUi jsonForm={jsonForm} onFieldUpdate={onFieldUpdate}
+                        deleteField={(index) => deleteField(index)}
+                    />
                 </div>
             </div>
         </div>

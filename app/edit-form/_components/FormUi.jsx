@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import FieldEdit from './FieldEdit'
 
 function FormUi({ jsonForm }) {
     return (
@@ -84,10 +85,10 @@ function FormUi({ jsonForm }) {
                                     />
                                 </div>
                     }
+                    <div><FieldEdit /></div>
                 </div>
 
-            ))
-            }
+            ))}
         </div >
     )
 }

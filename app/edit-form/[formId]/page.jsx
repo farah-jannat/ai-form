@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import FormUi from '../_components/FormUi'
+import { toast } from 'sonner'
 
 function EditForm() {
 
@@ -39,6 +40,8 @@ function EditForm() {
             .set({
                 jsonform: jsonForm
             }).where(and(eq(JsonForms.id, record.id), eq(JsonForms?.createdBy, user?.primaryEmailAddress?.emailAddress)))
+
+        toast('Updated!!')
         console.log('result of updaing db', result)
     }
 

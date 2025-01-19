@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import FormUi from '../_components/FormUi'
 import { toast } from 'sonner'
+import Controller from '../_components/Controller'
 
 function EditForm() {
 
@@ -18,6 +19,8 @@ function EditForm() {
     const router = useRouter()
     const [updateTrigger, setUpdateTrigger] = useState();
     const [record, setRecord] = useState([]);
+    const [selectedTheme, setSelectedTheme] = useState('light')
+
 
 
     useEffect(() => {
@@ -87,11 +90,12 @@ function EditForm() {
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
                 <div className='border rounded-lg shadow-md p-4'>
-                    Controller
+                    <Controller selectedTheme={(value) => setSelectedTheme(value)} />
                 </div>
                 <div className='md:col-span-2 border rounded-lg  p-5 flex items-center justify-center'>
                     <FormUi jsonForm={jsonForm} onFieldUpdate={onFieldUpdate}
                         deleteField={(index) => deleteField(index)}
+                        selectedTheme={selectedTheme}
                     />
                 </div>
             </div>

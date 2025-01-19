@@ -16,12 +16,18 @@ import {
 } from "@/components/ui/select"
 import FieldEdit from './FieldEdit'
 
-function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme }) {
+function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, selectedStyle }) {
 
 
 
     return (
-        <div className='border p-5 md:w-[600px] rounded-lg' data-theme={selectedTheme}>
+        <div className='border p-5 md:w-[600px] rounded-lg' data-theme={selectedTheme} style={
+
+            {
+                boxShadow: selectedStyle?.key == 'boxshadow' && '5px 5px 0px black',
+                border: selectedStyle?.key == 'border' && selectedStyle.value
+            }
+        }>
             <h2 className='font-bold text-center text-2xl'>{jsonForm.formTitle}</h2>
             <h2 className='text-sm text-gray-400 text-center'>{jsonForm.formHeading}</h2>
 

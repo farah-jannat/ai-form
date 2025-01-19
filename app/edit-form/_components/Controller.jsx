@@ -9,9 +9,11 @@ import {
 } from "@/components/ui/select"
 import Themes from '@/app/_data/Themes'
 import GradientBg from '@/app/_data/GradientBg'
+import Style from '@/app/_data/Style'
+import { index } from 'drizzle-orm/mysql-core'
 
 
-function Controller({ selectedTheme }) {
+function Controller({ selectedTheme, selectedBg, selectedItem, setSelectedItem, selectedStyle, selectedBorder, setSelectedBorder }) {
     const [showMore, setShowMore] = useState(6)
     return (
         <div>
@@ -56,16 +58,53 @@ function Controller({ selectedTheme }) {
             <h2 className='mt-8 my-1'> Background Themes</h2>
             <div className='grid grid-cols-3 gap-5'>
                 {GradientBg.map((bg, index) => (index < showMore) && (
-                    <div className='w-full h-[80px] cursor-pointer rounded-lg hover: border-2 hover:border-black flex justify-center items-center' style={{ background: bg.gradient }}>
+                    <div key={index} value={bg.gradient}
+                        className='w-full h-[80px] cursor-pointer rounded-lg 
+                        hover:border-2 hover:border-black flex justify-center items-center'
+                        style={{
+                            background: bg.gradient,
+                            border: index == selectedItem ? '1px solid black' : ''
+
+                        }}
+
+                        onClick={() => {
+                            setSelectedItem(index)
+
+                            selectedBg(bg.gradient)
+                        }}
+                    >
                         {index == 0 && 'None'}
+
                     </div>
                 ))}
-
             </div>
             <Button variant='ghost' size='sm' className='w-full my-6'
                 onClick={() => setShowMore(showMore > 6 ? 6 : 20)}>
                 {showMore > 6 ? 'Show Less' : 'Show More'}
             </Button>
+
+            {/* {style selction controller}  */}
+            <h2 className='mt-8 my-1'> Styles </h2>
+            <div className='grid grid-cols-3 gap-5'>
+                {Style.map((item, index) => (
+                    <div key={index}>
+                        <div className='cursor-pointer hover:border-2 rounded-lg '
+
+                            style={{
+                                border: index == selectedBorder ? '1px solid black' : ''
+                            }}
+
+                            onClick={() => {
+                                selectedStyle(item)
+                                setSelectedBorder(index)
+                            }}>
+
+                            <img src={item.name} width={600} height={80} className='rounded-lg' />
+                        </div>
+                        <h2> {item.name}</h2>
+                    </div>
+                ))}
+            </div>
 
         </div>
     )

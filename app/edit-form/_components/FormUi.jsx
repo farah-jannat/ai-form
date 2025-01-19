@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/select"
 import FieldEdit from './FieldEdit'
 
-function FormUi({ jsonForm, onFieldUpdate, deleteField }) {
+function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme }) {
 
 
 
     return (
-        <div className='border p-5 md:w-[600px] rounded-lg'>
+        <div className='border p-5 md:w-[600px] rounded-lg' data-theme={selectedTheme}>
             <h2 className='font-bold text-center text-2xl'>{jsonForm.formTitle}</h2>
             <h2 className='text-sm text-gray-400 text-center'>{jsonForm.formHeading}</h2>
 
@@ -91,10 +91,12 @@ function FormUi({ jsonForm, onFieldUpdate, deleteField }) {
                     <div><FieldEdit defaultValue={field}
                         onUpdate={(value) => onFieldUpdate(value, index)}
                         deleteField={() => deleteField(index)}
+
                     /></div>
                 </div>
 
             ))}
+            <button className='btn btn-primary'>Submit</button>
         </div >
     )
 }

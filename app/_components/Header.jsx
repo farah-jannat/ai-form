@@ -2,13 +2,17 @@
 import { Button } from '@/components/ui/button'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 function Header() {
-
     const { user, isSignedIn } = useUser();
-    return (
+    const path = usePathname();
+    // useEffect(() => {
+    //     console.log()
+    // }, [])
+    return !path.includes('aiform') && (
         <div className='p-5 border-b shadow-sm'>
             <div className='flex justify-between'>
                 <Image src={'/logo.svg'} width={180} height={50} alt='logo' />

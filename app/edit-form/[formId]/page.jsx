@@ -5,11 +5,14 @@ import { useUser } from '@clerk/nextjs'
 import { and, eq } from 'drizzle-orm'
 import React, { useEffect, useState } from 'react'
 import { useParams } from "next/navigation";
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Share2, SquareArrowOutUpRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import FormUi from '../_components/FormUi'
 import { toast } from 'sonner'
 import Controller from '../_components/Controller'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link';
+
 
 function EditForm() {
 
@@ -98,9 +101,19 @@ function EditForm() {
 
     return (
         <div className='p-10 '>
-            <h2 className='flex gap-2 items-center my-5 cursor-pointer hover:font-bold' onClick={() => router.back()}>
-                <ArrowLeft />Back
-            </h2>
+            <div className='flex justify-between items-center'>
+
+                <h2 className='flex gap-2 items-center my-5 cursor-pointer hover:font-bold' onClick={() => router.back()}>
+                    <ArrowLeft />Back
+                </h2>
+                <div className='flex gap-3'>
+                    <Link href={'/aiform/' + record?.id} target='_blank'>
+
+                        <Button className='flex gap-2 bg-primary hover:bg-purple-700'><SquareArrowOutUpRight /> Live preview</Button>
+                    </Link>
+                    <Button className='flex gap-2 bg-green-600 hover:bg-green-700'><Share2 /> share</Button>
+                </div>
+            </div>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
                 <div className='border rounded-lg shadow-md p-4'>

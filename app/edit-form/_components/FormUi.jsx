@@ -1,5 +1,6 @@
+'use client'
 import { Input } from '@/components/ui/input'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -16,18 +17,36 @@ import {
 } from "@/components/ui/select"
 import FieldEdit from './FieldEdit'
 
-function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, selectedStyle }) {
+function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, editable = true, selectedStyle }) {
+
+    const [formData, setFormData] = useState();
+    const handleInputChange = (event) => {
+        const { name, value } = event.target
+        // console.log('name of and value', name, value)
+
+        setFormData({
+            ...formData,
+            [name]: value
+        })
+    }
+
+    const onFormSubmit = (event) => {
+        console.log('fomdata', formData)
+        event.preventDefault();
+    }
 
 
 
     return (
-        <div className='border p-5 md:w-[600px] rounded-lg' data-theme={selectedTheme} style={
+        <form
+            onSubmit={onFormSubmit}
+            className='border p-5 md:w-[600px] rounded-lg' data-theme={selectedTheme} style={
 
-            {
-                boxShadow: selectedStyle?.key == 'boxshadow' && '5px 5px 0px black',
-                border: selectedStyle?.key == 'border' && selectedStyle.value
-            }
-        }>
+                {
+                    boxShadow: selectedStyle?.key == 'boxshadow' && '5px 5px 0px black',
+                    border: selectedStyle?.key == 'border' && selectedStyle.value
+                }
+            }>
             <h2 className='font-bold text-center text-2xl'>{jsonForm.formTitle}</h2>
             <h2 className='text-sm text-gray-400 text-center'>{jsonForm.formHeading}</h2>
 
@@ -42,7 +61,7 @@ function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, selectedS
                                 </SelectTrigger>
                                 <SelectContent>
                                     {field.options.map((item, index) => (
-                                        <SelectItem key={index} value="light">{item}</SelectItem>
+                                        <SelectItem key={index} value={item}>{item}</SelectItem>
                                     ))}
 
 
@@ -54,7 +73,7 @@ function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, selectedS
                                 <label className='text-xs text-gray-500'>{field.label}</label>
                                 {field?.options ? field?.options?.map((item, index) => (
                                     <div key={index} className='flex gap-2'>
-                                        <Checkbox />
+                                        <Checkbox required={field?.required} />
                                         <h2>{item}</h2>
 
                                     </div>
@@ -72,7 +91,7 @@ function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, selectedS
                                 <div className='w-full'>
                                     <label className='text-xs text-gray-500'>{field.label}</label>
 
-                                    <RadioGroup>
+                                    <RadioGroup required={field?.required}>
                                         {field?.options?.map((item, index) => (
                                             <div key={index} className="flex items-center space-x-2">
                                                 <RadioGroupItem value={item} id={item} />
@@ -90,20 +109,22 @@ function FormUi({ jsonForm, onFieldUpdate, deleteField, selectedTheme, selectedS
                                     <label className='text-xs text-gray-500'>{field.label}</label>
                                     <Input type={field?.type}
                                         placeholder={field?.placeholder}
+                                        required={field?.required}
                                         name={field?.fieldName}
+                                        onChange={(e) => handleInputChange(e)}
                                     />
                                 </div>
                     }
-                    <div><FieldEdit defaultValue={field}
+                    {editable && <div><FieldEdit defaultValue={field}
                         onUpdate={(value) => onFieldUpdate(value, index)}
                         deleteField={() => deleteField(index)}
 
-                    /></div>
+                    /></div>}
                 </div>
 
             ))}
-            <button className='btn btn-primary'>Submit</button>
-        </div >
+            <button type='submit' className='btn btn-primary'>Submit</button>
+        </form>
     )
 }
 

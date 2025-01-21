@@ -1,6 +1,7 @@
 
 import React from 'react'
 import CreateForm from './_components/CreateForm'
+import FormList from './_components/FormList'
 
 function Dashboard() {
     return (
@@ -9,6 +10,8 @@ function Dashboard() {
 
                 <CreateForm />
             </h2>
+            {/* {list of forms} */}
+            <FormList />
 
         </div>
     )

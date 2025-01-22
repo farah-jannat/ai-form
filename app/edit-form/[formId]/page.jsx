@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import Controller from '../_components/Controller'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link';
+import { RWebShare } from "react-web-share";
 
 
 function EditForm() {
@@ -111,7 +112,17 @@ function EditForm() {
 
                         <Button className='flex gap-2 bg-primary hover:bg-purple-700'><SquareArrowOutUpRight /> Live preview</Button>
                     </Link>
-                    <Button className='flex gap-2 bg-green-600 hover:bg-green-700'><Share2 /> share</Button>
+                    <RWebShare
+                        data={{
+                            text: jsonForm?.formHeading + ", build your form in seconds with ai form creator",
+                            url: process.env.NEXT_PUBLIC_BASE_URL + '/ai-form/' + record?.id,
+                            title: jsonForm?.formTitle,
+                        }}
+                        onClick={() => console.log("shared successfully!")}
+                    >
+                        <Button className='flex gap-2 bg-green-600 hover:bg-green-700'><Share2 /> share</Button>
+                    </RWebShare>
+
                 </div>
             </div>
 

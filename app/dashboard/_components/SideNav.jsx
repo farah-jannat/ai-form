@@ -2,10 +2,14 @@
 
 import { LibraryBig, LineChart, MessageSquare, Shield } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Progress } from "@/components/ui/progress"
 import Link from 'next/link'
+import { useUser } from '@clerk/nextjs'
+import { db } from '@/configs'
+import { desc, eq } from 'drizzle-orm'
+import { JsonForms } from '@/configs/schema'
 
 
 function SideNav() {
@@ -37,10 +41,27 @@ function SideNav() {
 
     ]
 
-    const path = usePathname();
+    const { user } = useUser();
+    const [formList, setFormList] = useState([])
+    const [parcFileCreated, setParcFileCreated] = useState(0);
+
     useEffect(() => {
-        console.log(path.includes('responses') !== -1)
-    }, [path])
+        user && GetFormList()
+    }, [user])
+    const GetFormList = async () => {
+        const result = await db.select().from(JsonForms)
+            .where(eq(JsonForms.createdBy, user?.primaryEmailAddress?.emailAddress))
+            .orderBy(desc(JsonForms.id));
+
+        setFormList(result);
+        const parc = (result.length / 3) * 100
+        setParcFileCreated(parc);
+    }
+
+    const path = usePathname();
+    // useEffect(() => {
+    //     console.log(path.includes('responses') !== -1)
+    // }, [path])
 
 
     return (
@@ -56,8 +77,8 @@ function SideNav() {
             <div className='fixed bottom-20 p-6 w-64'>
                 <Button className='w-full'>+ Create Form</Button>
                 <div className='my-7'>
-                    <Progress value={33} />
-                    <h2 className='text-sm mt-2 text-gray-600'><strong>2</strong> out of <strong>3</strong> file created</h2>
+                    <Progress value={parcFileCreated} />
+                    <h2 className='text-sm mt-2 text-gray-600'><strong>{formList.length}</strong> out of <strong>3</strong> file created</h2>
                     <h2 className='text-sm mt-3 text-gray-600'>Upgrade your plan for unlimited ai form build</h2>
 
                 </div>
